@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3DCraftum — SEO-Optimized Etsy Listings for 3D Prints</title>
+  <meta name="description" content="Turn your 3D print parameters into ready-to-post Etsy listings. Generate titles, descriptions, and tags that sell.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-tertiary: #1a1a25;
+      --accent: #f97316;
+      --accent-hover: #fb923c;
+      --accent-glow: rgba(249, 115, 22, 0.3);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #2e2e3a;
+      --success: #22c55e;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Animated background */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(249, 115, 22, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(249, 115, 22, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      top: -200px;
+      left: -200px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      min-height: 100vh;
+    }
+
+    /* Logo */
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 48px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 20px;
+      height: 20px;
+      color: white;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    h1 span {
+      color: var(--accent);
+    }
+
+    .value-props {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Demo Section */
+    .demo-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .demo-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+
+    .demo-badge {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--text-muted);
+    }
+
+    /* Output */
+    .output-section {
+      display: none;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .output-section.show {
+      display: block;
+    }
+
+    .output-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .output-block {
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .output-block h4 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .output-block p {
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .tags-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    /* Waitlist Form */
+    .waitlist-form {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+
+    .waitlist-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .waitlist-header h3 {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .waitlist-header p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .form-content .form-group {
+      margin-bottom: 16px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Success state */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .success-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--success);
+    }
+
+    .success-message h4 {
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+    }
+
+    .success-message p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .waitlist-form.submitted .form-content {
+      display: none;
+    }
+
+    /* Social proof */
+    .social-proof {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 48px;
+    }
+
+    .social-proof strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 540px) {
+      .container {
+        padding: 40px 20px;
+      }
+
+      .demo-section,
+      .waitlist-form {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div class="container">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+      </div>
+      3DCraftum
+    </div>
+
+    <section class="hero">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Early access opening soon
+      </div>
+      <h1>Turn 3D Print Parameters into <span>Ready-to-Post Etsy Listings</span></h1>
+      <p class="value-props">
+        Stop guessing what to write. Enter your model details, material, and print specs — get optimized titles, descriptions, and tags that actually rank on Etsy.
+      </p>
+    </section>
+
+    <!-- Demo Section -->
+    <div class="demo-section">
+      <div class="demo-header">
+        <span class="demo-title">Try it now</span>
+        <span class="demo-badge">Free Demo</span>
+      </div>
+
+      <form id="demoForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="modelName">Model Name</label>
+            <input type="text" id="modelName" name="modelName" placeholder="e.g., Dragon Miniature" required>
+          </div>
+          <div class="form-group">
+            <label for="material">Material</label>
+            <select id="material" name="material" required>
+              <option value="" disabled selected>Select material</option>
+              <option value="PLA">PLA</option>
+              <option value="PETG">PETG</option>
+              <option value="ABS">ABS</option>
+              <option value="Resin">Resin</option>
+              <option value="TPU">TPU</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="printTime">Print Time</label>
+            <input type="text" id="printTime" name="printTime" placeholder="e.g., 4 hours" required>
+          </div>
+          <div class="form-group">
+            <label for="dimensions">Dimensions</label>
+            <input type="text" id="dimensions" name="dimensions" placeholder="e.g., 100mm x 80mm x 60mm" required>
+          </div>
+          <div class="form-group full-width">
+            <label for="category">Category (optional)</label>
+            <select id="category" name="category">
+              <option value="">Select category</option>
+              <option value="Figurines">Figurines</option>
+              <option value="Toys & Games">Toys & Games</option>
+              <option value="Home Decor">Home Decor</option>
+              <option value="Art & Sculpture">Art & Sculpture</option>
+              <option value="Tools & Gadgets">Tools & Gadgets</option>
+              <option value="Jewelry">Jewelry</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn-secondary">Generate Listing →</button>
+      </form>
+
+      <div class="output-section" id="outputSection">
+        <div class="output-label">Your Generated Listing</div>
+        
+        <div class="output-block">
+          <h4>Title (≤140 chars)</h4>
+          <p id="outputTitle"></p>
+        </div>
+
+        <div class="output-block">
+          <h4>Description (≤950 chars)</h4>
+          <p id="outputDescription"></p>
+        </div>
+
+        <div class="output-block">
+          <h4>Tags (13 tags)</h4>
+          <div class="tags-preview" id="outputTags"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Waitlist Section -->
+    <div class="waitlist-form" id="waitlistForm">
+      <div class="waitlist-header">
+        <h3>Get early access</h3>
+        <p>Join the waitlist to be notified when 3DCraftum launches</p>
+      </div>
+
+      <form class="form-content" id="waitlistFormEl">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+        <button type="submit" class="btn-primary">Join the Waitlist</button>
+      </form>
+
+      <div class="success-message" id="successMessage">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h4>You're on the list!</h4>
+        <p>We'll notify you when early access opens up.</p>
+      </div>
+    </div>
+
+    <p class="social-proof">
+      <strong id="waitlistCount">247</strong> 3D print sellers have already joined
+    </p>
+
+    <footer class="footer">
+      <p>Built for 3D printing entrepreneurs 🖨️</p>
+    </footer>
+  </div>
+
+  <script>
+    // Adapted from generate_listing.py
+    function generateTitle(modelName, material, category) {
+      const fileType = 'STL';
+      const primary = modelName.trim();
+      const secondary = '3D Model';
+      const feature = material ? `${material} Printable` : 'Instant Download';
+      
+      let title = `${primary} | ${secondary} | ${feature}`;
+      
+      if (category) {
+        title = `${primary} | ${category} | ${feature}`;
+      }
+      
+      if (title.length > 140) {
+        title = title.substring(0, 137) + '...';
+      }
+      
+      return title;
+    }
+
+    function generateDescription(modelName, material, printTime, dimensions, category) {
+      const displayName = modelName;
+      const shortDesc = `High-quality ${modelName} 3D model perfect for ${material || '3D printing'}.`;
+      
+      let lines = [];
+      
+      lines.push('OVERVIEW');
+      lines.push(shortDesc);
+      lines.push('');
+      
+      lines.push("WHAT'S INCLUDED");
+      lines.push(`- ${displayName} (STL format)`);
+      lines.push('- File ready for 3D printing');
+      lines.push('- Instant digital download');
+      lines.push('');
+      
+      lines.push('PRINT SETTINGS');
+      lines.push(`- Recommended dimensions: ${dimensions}`);
+      lines.push('- Layer height: 0.2mm recommended');
+      lines.push('- Infill: 20%');
+      lines.push('- No supports needed');
+      if (printTime) {
+        lines.push(`- Estimated print time: ${printTime}`);
+      }
+      lines.push('');
+      
+      lines.push('USAGE RIGHTS');
+      lines.push('- License: Personal Use Only');
+      lines.push('- For personal projects only');
+      lines.push('- Not for resale of the 3D model file itself');
+      lines.push('');
+      
+      lines.push('FAQ');
+      lines.push('Q: What software do I need?');
+      lines.push('A: Any slicer software (Cura, PrusaSlicer, Simplify3D).');
+      lines.push('');
+      lines.push('Q: Can I print this in other materials?');
+      lines.push(`A: Yes, works with PLA, PETG, ABS, and ${material === 'Resin' ? 'resin' : 'other materials'}.`);
+      lines.push('');
+      lines.push('Q: How do I get my files?');
+      lines.push('A: Files are available for instant download after purchase.');
+      lines.push('');
+      lines.push('Thank you for supporting our 3D designs!');
+      
+      let fullDescription = lines.join('\n');
+      
+      if (fullDescription.length > 950) {
+        fullDescription = fullDescription.substring(0, 947) + '...';
+      }
+      
+      return fullDescription;
+    }
+
+    function generateTags(modelName, material, category) {
+      const modelWords = modelName.toLowerCase().split(' ').slice(0, 2);
+      
+      const essential = ['3d print', 'digital download', 'printable art', 'stl file'];
+      const materialTags = material ? [`${material.toLowerCase()} filament`, material.toLowerCase()] : [];
+      const fillers = ['instant download', 'maker', 'collector', 'gift idea', 'home decor', 'unique', 'diy craft'];
+      
+      let tags = [...modelWords];
+      
+      if (category) {
+        tags.push(category.toLowerCase());
+      }
+      
+      tags = [...tags, ...materialTags.slice(0, 1)];
+      tags = [...tags, ...essential];
+      
+      const seen = new Set(tags.map(t => t.toLowerCase().replace(/\s/g, '')));
+      
+      for (const tag of fillers) {
+        const norm = tag.replace(/\s/g, '');
+        if (!seen.has(norm) && tags.length < 13) {
+          tags.push(tag);
+          seen.add(norm);
+        }
+      }
+      
+      return tags.slice(0, 13);
+    }
+
+    // Demo form handler
+    const demoForm = document.getElementById('demoForm');
+    const outputSection = document.getElementById('outputSection');
+    
+    demoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const modelName = document.getElementById('modelName').value || '3D Model';
+      const material = document.getElementById('material').value || 'PLA';
+      const printTime = document.getElementById('printTime').value || '';
+      const dimensions = document.getElementById('dimensions').value || 'N/A';
+      const category = document.getElementById('category').value || '';
+      
+      const title = generateTitle(modelName, material, category);
+      const description = generateDescription(modelName, material, printTime, dimensions, category);
+      const tags = generateTags(modelName, material, category);
+      
+      document.getElementById('outputTitle').textContent = title;
+      document.getElementById('outputDescription').textContent = description;
+      
+      const tagsContainer = document.getElementById('outputTags');
+      tagsContainer.innerHTML = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+      
+      outputSection.classList.add('show');
+      
+      // Scroll to output
+      setTimeout(() => {
+        outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    });
+
+    // Waitlist form handler
+    const waitlistFormEl = document.getElementById('waitlistFormEl');
+    const waitlistFormContainer = document.getElementById('waitlistForm');
+    const successMessage = document.getElementById('successMessage');
+
+    // Animate waitlist count
+    const countEl = document.getElementById('waitlistCount');
+    const targetCount = 247;
+    let currentCount = 0;
+    const duration = 1000;
+    const increment = targetCount / (duration / 16);
+
+    function animateCount() {
+      if (currentCount < targetCount) {
+        currentCount = Math.min(currentCount + increment, targetCount);
+        countEl.textContent = Math.floor(currentCount).toLocaleString();
+        requestAnimationFrame(animateCount);
+      }
+    }
+
+    setTimeout(animateCount, 500);
+
+    waitlistFormEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      
+      const btn = waitlistFormEl.querySelector('.btn-primary');
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+      
+      // Replace with your Formspree endpoint
+      // Example: https://formspree.io/f/YOUR_FORM_ID
+      const formspreeEndpoint = 'https://formspree.io/f/YOUR_FORM_ID';
+      
+      try {
+        // If using Formspree, uncomment below:
+        // await fetch(formspreeEndpoint, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ email })
+        // });
+        
+        // For now, just log
+        console.log('Waitlist signup:', { email, timestamp: new Date().toISOString() });
+        
+        // Simulate success
+        await new Promise(resolve => setTimeout(resolve, 600));
+        
+        waitlistFormContainer.classList.add('submitted');
+        successMessage.classList.add('show');
+      } catch (error) {
+        console.error('Form submission error:', error);
+        btn.disabled = false;
+        btn.textContent = 'Join the Waitlist';
+      }
+    });
+  </script>
+</body>
+</html>
